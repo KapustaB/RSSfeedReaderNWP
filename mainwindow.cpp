@@ -12,3 +12,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_addLinkBtn_clicked()
+{
+    QString link;
+    link = ui->linkLineEdit->text();
+    ui->linkListWidget->addItem(link);
+}
