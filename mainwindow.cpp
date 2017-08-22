@@ -30,3 +30,18 @@ void MainWindow::on_addLinkBtn_clicked()
      }
      ui->linkListWidget->addItem(link);
 }
+
+void MainWindow::on_linkListWidget_itemClicked(QListWidgetItem *item)
+{
+    ui->removeLinkBtn->setEnabled(true);
+}
+
+void MainWindow::on_removeLinkBtn_clicked()
+{
+    delete ui->linkListWidget->currentItem();
+}
+
+void MainWindow::on_removeLinkBtn_clicked(bool checked)
+{
+    if (checked == false) ui->removeLinkBtn->setEnabled(false);
+}
