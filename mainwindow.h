@@ -30,6 +30,8 @@ private slots:
 
     void on_linkListWidget_doubleClicked(const QModelIndex &index);
 
+    void updateText(const QString & newText);
+
 private:
     Ui::MainWindow *ui;
 };
