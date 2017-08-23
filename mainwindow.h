@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidget>
+#include <QNetworkReply>
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +25,10 @@ private slots:
     void on_removeLinkBtn_clicked();
 
     void on_removeLinkBtn_clicked(bool checked);
+
+    void requestReceived(QNetworkReply *reply);
+
+    void on_linkListWidget_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;

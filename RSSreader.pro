@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    listchecker.cpp
+    listchecker.cpp \
+    xmlreader.cpp
 
 HEADERS += \
         mainwindow.h \
-    listchecker.h
+    listchecker.h \
+    xmlreader.h
 
 FORMS += \
         mainwindow.ui
