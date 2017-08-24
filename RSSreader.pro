@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += network
+QT       += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,12 +29,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     listchecker.cpp \
-    xmlreader.cpp
+    xmlreader.cpp \
+    fileworker.cpp
 
 HEADERS += \
         mainwindow.h \
     listchecker.h \
-    xmlreader.h
+    xmlreader.h \
+    fileworker.h
 
 FORMS += \
         mainwindow.ui

@@ -19,7 +19,6 @@ void XmlReader::readXmlData(QNetworkReply *reply){
         reader.readNext();
         if (reader.isStartElement()) {
             qDebug()<<reader.name();
-            qDebug()<<elementList[1];
             for(int i=0; i<elementList.size(); ++i){
                 if(reader.name() == elementList[i]) sendText(reader.readElementText());
             }

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListWidget>
 #include <QNetworkReply>
+#include <QPrinter>
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,10 @@ private slots:
     void on_linkListWidget_doubleClicked(const QModelIndex &index);
 
     void updateText(const QString & newText);
+
+    void on_saveFeedBtn_clicked();
+
+    void on_printFeedBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

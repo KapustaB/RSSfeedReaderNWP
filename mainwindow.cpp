@@ -8,6 +8,9 @@
 #include <QDebug>
 #include "xmlreader.h"
 
+#include <QFileDialog>
+#include <QFile>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -67,7 +70,6 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         qDebug() << reply->errorString();
         return;
     }
-
     int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     qDebug() << httpStatusCode;
 
@@ -75,7 +77,6 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         xmlReader->readXmlData(reply);
     else if (httpStatusCode >= 300 && httpStatusCode < 400)
         xmlReader->redirectReply(reply);
-
 
     qDebug() << "Gotov";
     reply->manager()->deleteLater();
@@ -89,4 +90,29 @@ void MainWindow::on_linkListWidget_doubleClicked(const QModelIndex &index)
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestReceived(QNetworkReply*)));
     qDebug() << "manager->get";
     manager->get(QNetworkRequest(QUrl(ui->linkListWidget->item(index.row())->text())));
+}
+
+void MainWindow::on_saveFeedBtn_clicked()
+{
+    QTextDocument *doc = ui->msgFeedTextBrowser->document();
+    QString txt = doc->toRawText();
+
+    QString fileName = QFileDialog::getSaveFileName(this, QObject::tr("Save File"),"RSSfeed.txt", QObject::tr("text file (*.txt)"));
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Cannot open file for writing: "
+                  << qPrintable(file.errorString());
+        return;
+    }
+    QTextStream out(&file);
+    out << txt << endl;
+}
+
+
+
+void MainWindow::on_printFeedBtn_clicked()
+{
+
 }
