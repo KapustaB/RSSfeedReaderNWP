@@ -2,6 +2,7 @@
 #define XMLREADER_H
 #include <QNetworkReply>
 #include <QMainWindow>
+#include "rssfeed.h"
 
 class XmlReader: public QObject
 {
@@ -10,9 +11,11 @@ public:
     XmlReader();
     void readXmlData(QNetworkReply *reply);
     void redirectReply(QNetworkReply *reply);
+    QList<RssFeed> getArticleList();
 
-signals:
-    void sendText(const QString & newText);
+private:
+    int checkIfInList(QString title, QString desc);
+     QList<RssFeed> articleList;
 };
 
 

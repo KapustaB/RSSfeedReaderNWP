@@ -8,6 +8,9 @@ QT       += core gui
 QT       += network
 QT       += printsupport
 
+LIBS += -LC:/OpenSSL-Win64/-llibeay32
+INCLUDEPATH += C:/OpenSSL-Win64/include
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = RSSreader
@@ -30,13 +33,15 @@ SOURCES += \
         mainwindow.cpp \
     listchecker.cpp \
     xmlreader.cpp \
-    fileworker.cpp
+    fileworker.cpp \
+    rssfeed.cpp
 
 HEADERS += \
         mainwindow.h \
     listchecker.h \
     xmlreader.h \
-    fileworker.h
+    fileworker.h \
+    rssfeed.h
 
 FORMS += \
         mainwindow.ui

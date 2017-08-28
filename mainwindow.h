@@ -5,6 +5,8 @@
 #include <QListWidget>
 #include <QNetworkReply>
 #include <QPrinter>
+#include <QTreeWidgetItem>
+#include "rssfeed.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,24 +23,23 @@ public:
 private slots:
     void on_addLinkBtn_clicked();
 
-    void on_linkListWidget_itemClicked(QListWidgetItem *item);
-
     void on_removeLinkBtn_clicked();
 
     void on_removeLinkBtn_clicked(bool checked);
 
     void requestReceived(QNetworkReply *reply);
 
-    void on_linkListWidget_doubleClicked(const QModelIndex &index);
-
-    void updateText(const QString & newText);
-
     void on_saveFeedBtn_clicked();
 
     void on_printFeedBtn_clicked();
 
+    void on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    void on_linksTreeWidget_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
+    QList<RssFeed> articleList;
 };
 
 #endif // MAINWINDOW_H
