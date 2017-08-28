@@ -8,18 +8,16 @@ XmlReader::XmlReader()
   QList<RssFeed> articleList;
 }
 
-
 void XmlReader::readXmlData(QNetworkReply *reply){
 
    QList<QString> elementList = {"title", "description","pubDate"};
    qDebug() << "Reading xml data";
-    RssFeed *feed = new RssFeed();
+   RssFeed *feed = new RssFeed();
    QByteArray bytes = reply->readAll();
    QXmlStreamReader reader;
    reader.addData(bytes);
    while(!reader.atEnd()) {
         reader.readNext();
-
         if (reader.isStartElement()) {
               if(reader.name().toString()==elementList[0])
                       feed->setTitle(reader.readElementText());
@@ -32,14 +30,12 @@ void XmlReader::readXmlData(QNetworkReply *reply){
         if(!feed->getTitle().isEmpty() && !feed->getDescription().isEmpty()) {
             if(checkIfInList(feed->getTitle(),feed->getDescription())){
                 articleList.append(*feed);
-                RssFeed *feed = new RssFeed();
             }
         }
    }
-   if (reader.hasError()) {
-         qDebug() << reader.errorString();
-   }
+   if (reader.hasError()) qDebug() << reader.errorString();
 }
+
 int XmlReader::checkIfInList(QString title, QString desc){
     for(int i=0; i<articleList.size();++i){
         if(articleList[i].getTitle()==title)return 0;
@@ -61,5 +57,5 @@ void XmlReader::redirectReply(QNetworkReply *reply){
     QNetworkRequest redirection(newUrl);
     QNetworkReply *newReply = manager->get(redirection);
     this->readXmlData(newReply);
-    return; // to keep the manager for the next request
+    return;
 }

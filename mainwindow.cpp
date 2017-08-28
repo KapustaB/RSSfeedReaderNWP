@@ -108,7 +108,7 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
 {
     ui->msgFeedTextBrowser->clear();
     QString selectedItemTxt = ui->linksTreeWidget->currentItem()->text(column);
-    qDebug()<<selectedItemTxt;
+
     //Top item - parent, ako nije - child
     if(item->parent()){
         for(int j=0; j<articleList.size(); ++j){
