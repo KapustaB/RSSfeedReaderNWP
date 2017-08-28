@@ -37,6 +37,8 @@ private slots:
 
     void on_linksTreeWidget_clicked(const QModelIndex &index);
 
+    void print(QPrinter* printer);
+
 private:
     Ui::MainWindow *ui;
     QList<RssFeed> articleList;

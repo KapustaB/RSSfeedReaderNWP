@@ -8,9 +8,6 @@ QT       += core gui
 QT       += network
 QT       += printsupport
 
-LIBS += -LC:/OpenSSL-Win64/-llibeay32
-INCLUDEPATH += C:/OpenSSL-Win64/include
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = RSSreader

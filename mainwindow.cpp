@@ -10,6 +10,9 @@
 #include "rssfeed.h"
 #include <QFileDialog>
 #include <QFile>
+#include <QPrintPreviewDialog>
+#include <QtPrintSupport/QPrinter>
+#include <QPainter>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -104,9 +107,27 @@ void MainWindow::on_saveFeedBtn_clicked()
     out << txt << endl;
 }
 
+void MainWindow::print(QPrinter *printer)
+{
+    QPainter painter(printer);
+    painter.setFont(QFont("Arial", 12));
+    //painter.drawText(200, Qt::AlignLeft|Qt::AlignTop, ui->msgFeedTextBrowser->toPlainText());
+    QRect totalRect = printer->pageRect();
+    //Here, I draw the text from (0,0)
+    painter.drawText( QRect(50,50, totalRect.width()-50 , totalRect.height()-50 ) ,
+    Qt::AlignLeft | Qt::TextJustificationForced | Qt::TextIncludeTrailingSpaces
+    | Qt::TextExpandTabs | Qt::TextWordWrap
+    | Qt::TextWrapAnywhere ,
+    ui->msgFeedTextBrowser->toPlainText() );
+}
+
 void MainWindow::on_printFeedBtn_clicked()
 {
-
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setPaperSize(QPrinter::A4);
+    QPrintPreviewDialog preview(&printer, this);
+    connect(&preview, SIGNAL(paintRequested(QPrinter*)), this, SLOT(print(QPrinter*)));
+    preview.exec();
 }
 
 void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
@@ -118,6 +139,8 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     if(item->parent()){
         for(int j=0; j<articleList.size(); ++j){
             if(articleList[j].getTitle() == selectedItemTxt){
+            ui->msgFeedTextBrowser->append(articleList[j].getTitle());
+            ui->msgFeedTextBrowser->append("\n");
             ui->msgFeedTextBrowser->append(articleList[j].getDescription());
             ui->pubDateLabel->setText(articleList[j].getPubDate());
             }
