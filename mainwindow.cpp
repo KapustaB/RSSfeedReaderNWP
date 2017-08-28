@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->linksTreeWidget->setColumnCount(1);
+    ui->linksTreeWidget->header()->close();
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +34,10 @@ void MainWindow::on_addLinkBtn_clicked()
     QString link = ui->linkLineEdit->text();
     ListChecker listChecker;
 
+    if(listChecker.checkIfListItemExist(link, ui->linksTreeWidget)){
+        makeNewMsgBoxLinkExists();
+        return;
+     }
      QTreeWidgetItem *item = new QTreeWidgetItem(ui->linksTreeWidget);
      item->setText(0,link);
      ui->linksTreeWidget->addTopLevelItem(item);
@@ -71,11 +76,13 @@ void MainWindow::requestReceived(QNetworkReply *reply)
     this->articleList = xmlReader->getArticleList();
     if(articleList.isEmpty()) return;
 
-    for(int i=0;i<articleList.size();++i){
+    ListChecker listchecker;
+    for(int i=0; i<articleList.size(); ++i){
         RssFeed feed = articleList[i];
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setText(0,feed.getTitle());
-        ui->linksTreeWidget->currentItem()->addChild(item);
+        if(!listchecker.checkIfListItemExist(feed.getTitle(), ui->linksTreeWidget))
+            ui->linksTreeWidget->currentItem()->addChild(item);
     }
     reply->manager()->deleteLater();
 }
@@ -109,15 +116,14 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     ui->msgFeedTextBrowser->clear();
     QString selectedItemTxt = ui->linksTreeWidget->currentItem()->text(column);
 
-    //Top item - parent, ako nije - child
     if(item->parent()){
         for(int j=0; j<articleList.size(); ++j){
-        if(articleList[j].getTitle()== selectedItemTxt){
-            qDebug()<<articleList[j].getDescription();
+            if(articleList[j].getTitle() == selectedItemTxt)
             ui->msgFeedTextBrowser->append(articleList[j].getDescription());
-        }
+         }
+        return;
     }
-}
+     foreach(auto i, item->takeChildren()) delete i; //Onemogucuje duplanje clanaka na refresh
      QNetworkAccessManager *manager = new QNetworkAccessManager(this);
      connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestReceived(QNetworkReply*)));
      manager->get(QNetworkRequest(QUrl(selectedItemTxt)));

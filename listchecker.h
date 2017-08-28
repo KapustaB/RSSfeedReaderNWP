@@ -3,13 +3,13 @@
 
 #include <stdlib.h>
 #include <qdebug.h>
-#include <QListWidget>
+#include <QTreeWidget>
 
 class ListChecker
 {
 public:
     ListChecker();
-    bool checkIfListItemExist(QString link, QListWidget* listWidget);
+    bool checkIfListItemExist(QString link, QTreeWidget* treeWidget);
 };
 
 #endif // LISTCHECKER_H
