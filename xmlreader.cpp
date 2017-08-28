@@ -27,8 +27,8 @@ void XmlReader::readXmlData(QNetworkReply *reply){
                       feed->setPubDate(reader.readElementText());
               }
 
-        if(!feed->getTitle().isEmpty() && !feed->getDescription().isEmpty()) {
-            if(checkIfInList(feed->getTitle(),feed->getDescription())){
+        if(!feed->getTitle().isEmpty() && !feed->getDescription().isEmpty() && !feed->getPubDate().isEmpty()) {
+            if(checkIfInList(feed->getTitle(), feed->getDescription(), feed->getPubDate())){
                 articleList.append(*feed);
             }
         }
@@ -36,10 +36,11 @@ void XmlReader::readXmlData(QNetworkReply *reply){
    if (reader.hasError()) qDebug() << reader.errorString();
 }
 
-int XmlReader::checkIfInList(QString title, QString desc){
+int XmlReader::checkIfInList(QString title, QString desc, QString pubDate){
     for(int i=0; i<articleList.size();++i){
-        if(articleList[i].getTitle()==title)return 0;
-        else if (articleList[i].getDescription()==desc) return 0;
+        if(articleList[i].getTitle() == title)return 0;
+        else if (articleList[i].getDescription() == desc) return 0;
+        else if (articleList[i].getPubDate() == pubDate) return 0;
     }
     return 1;
 }

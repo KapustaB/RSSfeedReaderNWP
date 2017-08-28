@@ -58,7 +58,6 @@ void MainWindow::on_removeLinkBtn_clicked(bool checked)
 void MainWindow::requestReceived(QNetworkReply *reply)
 {
     XmlReader *xmlReader = new XmlReader();
-
     reply->deleteLater();
 
     if(reply->error() != QNetworkReply::NoError) {
@@ -66,7 +65,6 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         return;
     }
     int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    qDebug() << httpStatusCode;
 
     if (httpStatusCode >= 200 && httpStatusCode < 300)
         xmlReader->readXmlData(reply);
@@ -114,12 +112,15 @@ void MainWindow::on_printFeedBtn_clicked()
 void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     ui->msgFeedTextBrowser->clear();
+    ui->pubDateLabel->clear();
     QString selectedItemTxt = ui->linksTreeWidget->currentItem()->text(column);
 
     if(item->parent()){
         for(int j=0; j<articleList.size(); ++j){
-            if(articleList[j].getTitle() == selectedItemTxt)
+            if(articleList[j].getTitle() == selectedItemTxt){
             ui->msgFeedTextBrowser->append(articleList[j].getDescription());
+            ui->pubDateLabel->setText(articleList[j].getPubDate());
+            }
          }
         return;
     }
