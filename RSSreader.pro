@@ -30,14 +30,12 @@ SOURCES += \
         mainwindow.cpp \
     listchecker.cpp \
     xmlreader.cpp \
-    fileworker.cpp \
     rssfeed.cpp
 
 HEADERS += \
         mainwindow.h \
     listchecker.h \
     xmlreader.h \
-    fileworker.h \
     rssfeed.h
 
 FORMS += \

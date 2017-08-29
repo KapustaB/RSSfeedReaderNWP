@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->linksTreeWidget->setColumnCount(1);
     ui->linksTreeWidget->header()->close();
+    QList<QList<RssFeed>> rssFeeds;
 }
 
 MainWindow::~MainWindow()
@@ -75,6 +76,7 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         xmlReader->redirectReply(reply);
 
     this->articleList = xmlReader->getArticleList();
+    rssFeeds.append(this->articleList);
     if(articleList.isEmpty()) return;
 
     ListChecker listchecker;
@@ -104,6 +106,7 @@ void MainWindow::on_saveFeedBtn_clicked()
         return;
     }
     QTextStream out(&file);
+    out.setFieldWidth(10);
     out << txt << endl;
 }
 
@@ -111,14 +114,11 @@ void MainWindow::print(QPrinter *printer)
 {
     QPainter painter(printer);
     painter.setFont(QFont("Arial", 12));
-    //painter.drawText(200, Qt::AlignLeft|Qt::AlignTop, ui->msgFeedTextBrowser->toPlainText());
     QRect totalRect = printer->pageRect();
-    //Here, I draw the text from (0,0)
-    painter.drawText( QRect(50,50, totalRect.width()-50 , totalRect.height()-50 ) ,
-    Qt::AlignLeft | Qt::TextJustificationForced | Qt::TextIncludeTrailingSpaces
-    | Qt::TextExpandTabs | Qt::TextWordWrap
-    | Qt::TextWrapAnywhere ,
-    ui->msgFeedTextBrowser->toPlainText() );
+    painter.drawText( QRect(100, 100, totalRect.width()-200 , totalRect.height()-200 ) ,
+                     Qt::AlignLeft | Qt::TextJustificationForced | Qt::TextIncludeTrailingSpaces
+                   | Qt::TextExpandTabs | Qt::TextWordWrap| Qt::TextWrapAnywhere,
+                     ui->msgFeedTextBrowser->toPlainText() );
 }
 
 void MainWindow::on_printFeedBtn_clicked()
@@ -136,18 +136,18 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     ui->pubDateLabel->clear();
     QString selectedItemTxt = ui->linksTreeWidget->currentItem()->text(column);
 
+    int index = ui->linksTreeWidget->currentIndex().row();
+    int listItemIndex = ui->linksTreeWidget->indexOfTopLevelItem(item->parent());
+
     if(item->parent()){
-        for(int j=0; j<articleList.size(); ++j){
-            if(articleList[j].getTitle() == selectedItemTxt){
-            ui->msgFeedTextBrowser->append(articleList[j].getTitle());
-            ui->msgFeedTextBrowser->append("\n");
-            ui->msgFeedTextBrowser->append(articleList[j].getDescription());
-            ui->pubDateLabel->setText(articleList[j].getPubDate());
-            }
-         }
+        ui->msgFeedTextBrowser->append(rssFeeds[listItemIndex][index].getTitle());
+        ui->msgFeedTextBrowser->append("\n");
+        ui->msgFeedTextBrowser->append(rssFeeds[listItemIndex][index].getDescription());
+        ui->pubDateLabel->setText(rssFeeds[listItemIndex][index].getPubDate());
         return;
     }
-     foreach(auto i, item->takeChildren()) delete i; //Onemogucuje duplanje clanaka na refresh
+
+     foreach(auto i, item->takeChildren()) delete i;
      QNetworkAccessManager *manager = new QNetworkAccessManager(this);
      connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestReceived(QNetworkReply*)));
      manager->get(QNetworkRequest(QUrl(selectedItemTxt)));

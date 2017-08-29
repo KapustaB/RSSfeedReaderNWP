@@ -7,6 +7,7 @@
 #include <QPrinter>
 #include <QTreeWidgetItem>
 #include "rssfeed.h"
+#include "xmlreader.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,6 +43,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QList<RssFeed> articleList;
+    QList<QList<RssFeed>> rssFeeds;
 };
 
 #endif // MAINWINDOW_H
