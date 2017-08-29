@@ -26,7 +26,6 @@ void XmlReader::readXmlData(QNetworkReply *reply){
               else if (reader.name().toString()==elementList[2])
                       feed->setPubDate(reader.readElementText());
               }
-
         if(!feed->getTitle().isEmpty() && !feed->getDescription().isEmpty() && !feed->getPubDate().isEmpty()) {
             if(checkIfInList(feed->getTitle(), feed->getDescription(), feed->getPubDate())){
                 articleList.append(*feed);
@@ -50,7 +49,6 @@ QList<RssFeed> XmlReader::getArticleList(){
 }
 
 void XmlReader::redirectReply(QNetworkReply *reply){
-
     QUrl newUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
     newUrl = reply->url().resolved(newUrl);
 
