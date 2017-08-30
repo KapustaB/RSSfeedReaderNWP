@@ -36,6 +36,9 @@ void  makeNewMsgBoxLinkExists(){
 void MainWindow::on_addLinkBtn_clicked()
 {
     QString link = ui->linkLineEdit->text();
+    link = link.simplified();
+    link.replace(" ", "");
+
     ListChecker listChecker;
 
     if(listChecker.checkIfListItemExist(link, ui->linksTreeWidget)){
