@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->linksTreeWidget->setColumnCount(1);
     ui->linksTreeWidget->header()->close();
-    QList<QList<RssFeed>> rssFeeds;
+    QMap<int, QList<RssFeed>> rssMapa;
 }
 
 MainWindow::~MainWindow()
@@ -76,9 +76,9 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         xmlReader->redirectReply(reply);
 
     this->articleList = xmlReader->getArticleList();
-    rssFeeds.append(this->articleList);
     if(articleList.isEmpty()) return;
 
+    // Ucitavanje clanaka u childs od tree widget-a
     ListChecker listchecker;
     for(int i=0; i<articleList.size(); ++i){
         RssFeed feed = articleList[i];
@@ -87,6 +87,9 @@ void MainWindow::requestReceived(QNetworkReply *reply)
         if(!listchecker.checkIfListItemExist(feed.getTitle(), ui->linksTreeWidget))
             ui->linksTreeWidget->currentItem()->addChild(item);
     }
+    int in = ui->linksTreeWidget->currentIndex().row();
+    rssMapa[in]=this->articleList;
+
     reply->manager()->deleteLater();
 }
 
@@ -138,11 +141,12 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     int index = ui->linksTreeWidget->currentIndex().row();
     int listItemIndex = ui->linksTreeWidget->indexOfTopLevelItem(item->parent());
 
+    qDebug()<<listItemIndex << " INDEXI " << index;
     if(item->parent()){
-        ui->msgFeedTextBrowser->append(rssFeeds[listItemIndex][index].getTitle());
+        ui->msgFeedTextBrowser->append(rssMapa[listItemIndex][index].getTitle());
         ui->msgFeedTextBrowser->append("\n");
-        ui->msgFeedTextBrowser->append(rssFeeds[listItemIndex][index].getDescription());
-        ui->pubDateLabel->setText(rssFeeds[listItemIndex][index].getPubDate());
+        ui->msgFeedTextBrowser->append(rssMapa[listItemIndex][index].getDescription());
+        ui->pubDateLabel->setText(rssMapa[listItemIndex][index].getPubDate());
         return;
     }
      foreach(auto i, item->takeChildren()) delete i;

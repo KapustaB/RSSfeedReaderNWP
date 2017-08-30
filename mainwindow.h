@@ -43,7 +43,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QList<RssFeed> articleList;
-    QList<QList<RssFeed>> rssFeeds;
+    QMap<int, QList<RssFeed>> rssMapa;
 };
 
 #endif // MAINWINDOW_H

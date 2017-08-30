@@ -15,7 +15,7 @@ public:
 
 private:
     int checkIfInList(QString title, QString desc, QString pubDate);
-     QList<RssFeed> articleList;
+     QList<RssFeed> articleList;    
 };
 
 
