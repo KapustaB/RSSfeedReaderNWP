@@ -141,14 +141,14 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     ui->pubDateLabel->clear();
     QString selectedItemTxt = ui->linksTreeWidget->currentItem()->text(column);
 
-    int index = ui->linksTreeWidget->currentIndex().row();
-    int listItemIndex = ui->linksTreeWidget->indexOfTopLevelItem(item->parent());
+    int itemIndex = ui->linksTreeWidget->currentIndex().row();
+    int linkIndex = ui->linksTreeWidget->indexOfTopLevelItem(item->parent());
 
     if(item->parent()){
-        ui->msgFeedTextBrowser->append(rssMapa[listItemIndex][index].getTitle());
+        ui->msgFeedTextBrowser->append(rssMapa[linkIndex][itemIndex].getTitle());
         ui->msgFeedTextBrowser->append("\n");
-        ui->msgFeedTextBrowser->append(rssMapa[listItemIndex][index].getDescription());
-        ui->pubDateLabel->setText(rssMapa[listItemIndex][index].getPubDate());
+        ui->msgFeedTextBrowser->append(rssMapa[linkIndex][itemIndex].getDescription());
+        ui->pubDateLabel->setText(rssMapa[linkIndex][itemIndex].getPubDate());
         return;
     }
      foreach(auto i, item->takeChildren()) delete i;
