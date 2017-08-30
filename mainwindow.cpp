@@ -144,7 +144,6 @@ void MainWindow::on_linksTreeWidget_itemDoubleClicked(QTreeWidgetItem *item, int
     int index = ui->linksTreeWidget->currentIndex().row();
     int listItemIndex = ui->linksTreeWidget->indexOfTopLevelItem(item->parent());
 
-    qDebug()<<listItemIndex << " INDEXI " << index;
     if(item->parent()){
         ui->msgFeedTextBrowser->append(rssMapa[listItemIndex][index].getTitle());
         ui->msgFeedTextBrowser->append("\n");

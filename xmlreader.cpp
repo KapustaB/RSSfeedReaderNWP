@@ -11,7 +11,6 @@ XmlReader::XmlReader()
 void XmlReader::readXmlData(QNetworkReply *reply){
 
    QList<QString> elementList = {"title", "description","pubDate"};
-   qDebug() << "Reading xml data";
    RssFeed *feed = new RssFeed();
    QByteArray bytes = reply->readAll();
    QXmlStreamReader reader;
