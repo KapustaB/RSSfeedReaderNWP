@@ -7,7 +7,7 @@ class RssFeed
 {
 public:
     RssFeed();
-
+    ~RssFeed();
     RssFeed(QString title, QString description, QString pubDate);
 
     void setTitle(QString title);

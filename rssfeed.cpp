@@ -3,7 +3,10 @@
 
 RssFeed::RssFeed()
 {
-    QString title, description, pubDate;
+
+}
+RssFeed::~RssFeed(){
+
 }
 
 RssFeed::RssFeed(QString title, QString description, QString pubDate){

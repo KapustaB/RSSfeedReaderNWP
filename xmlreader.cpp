@@ -5,43 +5,47 @@
 
 XmlReader::XmlReader()
 {
-  QList<RssFeed> articleList;
+
+}
+XmlReader::~XmlReader(){
+
 }
 
 void XmlReader::readXmlData(QNetworkReply *reply){
 
    QList<QString> elementList = {"title", "description","pubDate"};
-   RssFeed *feed = new RssFeed();
+   RssFeed feed;
    QByteArray bytes = reply->readAll();
    QXmlStreamReader reader;
    reader.addData(bytes);
    while(!reader.atEnd()) {
         reader.readNext();
         if (reader.isStartElement()) {
-              if(reader.name().toString()==elementList[0])
-                      feed->setTitle(reader.readElementText());
-              else if (reader.name().toString()==elementList[1])
-                      feed->setDescription(reader.readElementText());
-              else if (reader.name().toString()==elementList[2])
-                      feed->setPubDate(reader.readElementText());
+              QString elName = reader.name().toString();
+              if(elName == elementList[0])
+                      feed.setTitle(reader.readElementText());
+              else if (elName == elementList[1])
+                      feed.setDescription(reader.readElementText());
+              else if (elName == elementList[2])
+                      feed.setPubDate(reader.readElementText());
               }
-        if(!feed->getTitle().isEmpty() && !feed->getDescription().isEmpty() && !feed->getPubDate().isEmpty()) {
-            if(checkIfInList(feed->getTitle(), feed->getDescription(), feed->getPubDate())){
-                articleList.append(*feed);
+
+        if(!feed.getTitle().isEmpty() && !feed.getDescription().isEmpty() && !feed.getPubDate().isEmpty()) {
+            qDebug()<< feed.getPubDate();
+            if((std::find_if(std::begin(articleList), std::end(articleList),
+                             [&](RssFeed f){ return (f.getTitle() == feed.getTitle() ||
+                                                     f.getDescription() == feed.getDescription() ||
+                                                     f.getPubDate() == feed.getPubDate()); }) == articleList.end()))
+            {
+                articleList.append(feed);
+                qDebug()<<feed.getTitle();
             }
         }
    }
    if (reader.hasError()) qDebug() << reader.errorString();
 }
 
-int XmlReader::checkIfInList(QString title, QString desc, QString pubDate){
-    for(int i=0; i<articleList.size();++i){
-        if(articleList[i].getTitle() == title)return 0;
-        else if (articleList[i].getDescription() == desc) return 0;
-        else if (articleList[i].getPubDate() == pubDate) return 0;
-    }
-    return 1;
-}
+
 
 QList<RssFeed> XmlReader::getArticleList(){
     return this->articleList;

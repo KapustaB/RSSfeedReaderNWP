@@ -28,13 +28,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    listchecker.cpp \
     xmlreader.cpp \
     rssfeed.cpp
 
 HEADERS += \
         mainwindow.h \
-    listchecker.h \
     xmlreader.h \
     rssfeed.h
 

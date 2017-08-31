@@ -9,13 +9,14 @@ class XmlReader: public QObject
     Q_OBJECT
 public:
     XmlReader();
+    ~XmlReader();
     void readXmlData(QNetworkReply *reply);
     void redirectReply(QNetworkReply *reply);
     QList<RssFeed> getArticleList();
 
 private:
-    int checkIfInList(QString title, QString desc, QString pubDate);
-     QList<RssFeed> articleList;    
+    bool checkIfInList(QString title, QString desc, QString pubDate);
+     QList<RssFeed> articleList;
 };
 
 

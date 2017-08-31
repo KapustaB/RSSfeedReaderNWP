@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "listchecker.h"
 #include <QMessageBox>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QNetworkReply>
@@ -21,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->linksTreeWidget->setColumnCount(1);
     ui->linksTreeWidget->header()->close();
-    QMap<int, QList<RssFeed>> rssMapa;
 }
 
 MainWindow::~MainWindow()
@@ -33,15 +31,17 @@ void  makeNewMsgBoxLinkExists(){
     QMessageBox::information(0, "Error", "Link already exists!");
 }
 
+bool MainWindow::checkIsInList(QString link, QTreeWidget* treeWidget){
+    return !treeWidget->findItems(link, Qt::MatchExactly, 0).isEmpty();
+}
+
 void MainWindow::on_addLinkBtn_clicked()
 {
     QString link = ui->linkLineEdit->text();
     link = link.simplified();
     link.replace(" ", "");
 
-    ListChecker listChecker;
-
-    if(listChecker.checkIfListItemExist(link, ui->linksTreeWidget)){
+    if(checkIsInList(link, ui->linksTreeWidget)){
         makeNewMsgBoxLinkExists();
         return;
      }
@@ -64,7 +64,7 @@ void MainWindow::on_removeLinkBtn_clicked(bool checked)
 
 void MainWindow::requestReceived(QNetworkReply *reply)
 {
-    XmlReader *xmlReader = new XmlReader();
+    XmlReader xmlReader;
     reply->deleteLater();
 
     if(reply->error() != QNetworkReply::NoError) {
@@ -73,21 +73,21 @@ void MainWindow::requestReceived(QNetworkReply *reply)
     }
     int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-    if (httpStatusCode >= 200 && httpStatusCode < 300)
-        xmlReader->readXmlData(reply);
-    else if (httpStatusCode >= 300 && httpStatusCode < 400)
-        xmlReader->redirectReply(reply);
 
-    this->articleList = xmlReader->getArticleList();
+    if (httpStatusCode >= 200 && httpStatusCode < 300)
+        xmlReader.readXmlData(reply);
+    else if (httpStatusCode >= 300 && httpStatusCode < 400)
+        xmlReader.redirectReply(reply);
+
+    this->articleList = xmlReader.getArticleList();
     if(articleList.isEmpty()) return;
 
-    // Ucitavanje clanaka u childs od tree widget-a
-    ListChecker listchecker;
+
     for(int i=0; i<articleList.size(); ++i){
         RssFeed feed = articleList[i];
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setText(0,feed.getTitle());
-        if(!listchecker.checkIfListItemExist(feed.getTitle(), ui->linksTreeWidget))
+        if(!checkIsInList(feed.getTitle(), ui->linksTreeWidget))
             ui->linksTreeWidget->currentItem()->addChild(item);
     }
     int in = ui->linksTreeWidget->currentIndex().row();
@@ -113,6 +113,7 @@ void MainWindow::on_saveFeedBtn_clicked()
     QTextStream out(&file);
     out.setFieldWidth(10);
     out << txt << endl;
+    doc->deleteLater();
 }
 
 void MainWindow::print(QPrinter *printer)

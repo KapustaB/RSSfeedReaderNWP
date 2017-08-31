@@ -40,10 +40,13 @@ private slots:
 
     void print(QPrinter* printer);
 
+    bool checkIsInList(QString link, QTreeWidget* treeWidget);
+
 private:
     Ui::MainWindow *ui;
     QList<RssFeed> articleList;
     QMap<int, QList<RssFeed>> rssMapa;
+
 };
 
 #endif // MAINWINDOW_H
